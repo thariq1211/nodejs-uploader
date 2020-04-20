@@ -65,4 +65,6 @@ app.post("/do/upload", async (req, res) => {
 //   )
 //   .listen(SPORT);
 
-http.createServer(app).listen(PORT);
+http.createServer(app).listen(PORT, () => {
+  console.log(`App listening on PORT ${PORT}`);
+});
