@@ -1,0 +1,9 @@
+{
+  "apps": [
+    {
+      "name": "nodeBackenduploader",
+      "script": "npm",
+      "args": "start"
+    }
+  ]
+}
