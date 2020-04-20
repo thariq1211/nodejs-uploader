@@ -31,6 +31,19 @@ npm install -g nodemon
 5. Jika ingin ditambah security ssl, buat folder baru bernama "cert" dan import privkey.pem dan cert.pem didalam nya
 6. Uncomment code index.js pada baris 57 - 66
 
+```javascript
+// https
+//   .createServer(
+//     {
+//       key: fs.readFileSync("./cert/privkey.pem"),
+//       cert: fs.readFileSync("./cert/cert.pem"),
+//       passphrase: "PASSWORD CERT",
+//     },
+//     app
+//   )
+//   .listen(SPORT);
+```
+
 ## Penggunaan
 
 ```bash
