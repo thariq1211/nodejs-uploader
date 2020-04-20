@@ -44,6 +44,12 @@ npm install -g nodemon
 //   .listen(SPORT);
 ```
 
+7. Buat folder baru di server
+
+```bash
+mkdir /var/spool/recording/
+```
+
 ## Penggunaan
 
 ```bash
