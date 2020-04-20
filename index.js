@@ -46,14 +46,23 @@ app.post("/do/upload", async (req, res) => {
   });
 });
 
-https
-  .createServer(
-    {
-      key: fs.readFileSync("./cert/privkey.pem"),
-      cert: fs.readFileSync("./cert/cert.pem"),
-      passphrase: "mitrak",
-    },
-    app
-  )
-  .listen(SPORT);
+/**Uncomment code ini jika ingin ditambah ssl */
+/**
+ * Tambahkan cert ssl jika diperlukan di root dir
+ * dengan struktur
+ * /cert
+ * --privkey.pem
+ * --cert.pem
+ */
+// https
+//   .createServer(
+//     {
+//       key: fs.readFileSync("./cert/privkey.pem"),
+//       cert: fs.readFileSync("./cert/cert.pem"),
+//       passphrase: "PASSWORD CERT",
+//     },
+//     app
+//   )
+//   .listen(SPORT);
+
 http.createServer(app).listen(PORT);
