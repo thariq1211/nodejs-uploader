@@ -37,7 +37,7 @@ npm install -g nodemon
 6. Jika ingin ditambah security ssl, buat folder baru bernama "cert" dan import privkey.pem dan cert.pem didalam nya
 7. Uncomment code index.js pada baris 57 - 66
 
-```javascript
+```js
 // https
 //   .createServer(
 //     {
