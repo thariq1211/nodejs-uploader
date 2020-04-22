@@ -63,8 +63,10 @@ app.post("/system/upload", async (req, res) => {
 //     },
 //     app
 //   )
-//   .listen(SPORT);
+//   .listen(SPORT, () => {
+//     console.log(`https listen on secure port ${SPORT}`)
+//   });
 
 http.createServer(app).listen(PORT, () => {
-  console.log(`App listening on PORT ${PORT}`);
+  console.log(`app listening on PORT ${PORT}`);
 });
