@@ -33,7 +33,7 @@ app.get("/", async (req, res) => {
   res.status(200).send("Hello");
 });
 
-app.post("/do/upload", async (req, res) => {
+app.post("/system/upload", async (req, res) => {
   upload(req, res, (err) => {
     if (err) {
       console.error("error occured");
