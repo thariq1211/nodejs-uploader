@@ -10,26 +10,32 @@ backend untuk keperluan upload file ke server menggunakan multer
 git clone https://github.com/thariq1211/nodejs-uploader.git
 ```
 
-2. Install dependencies
+2. Masuk ke directory nodejs-uploader
+
+```bash
+cd nodejs-uploader
+```
+
+3. Install dependencies
 
 ```bash
 npm install
 ```
 
-3. Pasang pm2 secara global
+4. Pasang pm2 secara global
 
 ```bash
 npm install pm2 -g
 ```
 
-4. Pasang nodemon
+5. Pasang nodemon
 
 ```bash
 npm install -g nodemon
 ```
 
-5. Jika ingin ditambah security ssl, buat folder baru bernama "cert" dan import privkey.pem dan cert.pem didalam nya
-6. Uncomment code index.js pada baris 57 - 66
+6. Jika ingin ditambah security ssl, buat folder baru bernama "cert" dan import privkey.pem dan cert.pem didalam nya
+7. Uncomment code index.js pada baris 57 - 66
 
 ```javascript
 // https
@@ -44,7 +50,7 @@ npm install -g nodemon
 //   .listen(SPORT);
 ```
 
-7. Buat folder baru di server
+8. Buat folder baru di server
 
 ```bash
 mkdir /var/spool/recording/
