@@ -56,6 +56,14 @@ npm install -g nodemon
 mkdir /var/spool/recording/
 ```
 
+9. Pastikan library ffmpeg terinstall di server
+
+```bash
+ffmpeg -version
+```
+
+jika belum terinstall, maka install terlebih dahulu, klik https://bit.ly/2WbXhru
+
 ## Penggunaan
 
 ```bash
