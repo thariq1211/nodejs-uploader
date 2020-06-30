@@ -21,7 +21,6 @@ const storage = multer.diskStorage({
     callback(null, "/var/spool/recording/");
   },
   filename: (request, file, callback) => {
-    console.log(file);
     callback(null, file.originalname);
   },
 });
@@ -31,7 +30,7 @@ var upload = multer({ storage: storage }).single("videoFile");
  * Endpoints
  */
 app.get("/", async (req, res) => {
-  res.status(200).send("Hello");
+  res.sendStatus(202);
 });
 
 app.post(
@@ -48,7 +47,6 @@ app.post(
         res.status(500).json({ code: 0, status: "Error Occured" });
         return;
       }
-      console.log(req.file);
       console.log("Video Uploaded");
       exec(
         `bash doCombine IN-AGENT${agent}-NIK:${nik}-Date:${date}-Time:${time} IN-AGENT*-NIK:${nik}-Date:${date}-Time:${time} IN-AGENT${agent}-NIK:${nik}-Date:${date}-Time:${time}`,
@@ -64,7 +62,6 @@ app.post(
             return;
           }
           if (stderr) {
-            console.log(stderr);
             res.json({
               status: 1,
               message: "Successful Upload, combine with output message!!",
@@ -72,7 +69,6 @@ app.post(
             });
             return;
           }
-          console.log(stdout);
           res.json({
             status: 1,
             message: "Successful Upload, combine success!!",
@@ -103,9 +99,9 @@ app.post(
 //     app
 //   )
 //   .listen(SPORT, () => {
-//     console.log(`https listen on secure port ${SPORT}`)
+//     console.log(`secure server up on ${SPORT}`)
 //   });
 
 http.createServer(app).listen(PORT, () => {
-  console.log(`app listening on PORT ${PORT}`);
+  console.log(`server up on ${PORT}`);
 });

@@ -28,14 +28,8 @@ npm install
 npm install pm2 -g
 ```
 
-5. Pasang nodemon
-
-```bash
-npm install -g nodemon
-```
-
-6. Jika ingin ditambah security ssl, buat folder baru bernama "cert" dan import privkey.pem dan cert.pem didalam nya
-7. Uncomment code index.js pada baris 57 - 66
+5. Jika ingin ditambah security ssl, buat folder baru bernama "cert" dan import privkey.pem dan cert.pem didalam nya
+6. Uncomment code index.js pada baris 92 - 103
 
 ```js
 // https
@@ -50,13 +44,13 @@ npm install -g nodemon
 //   .listen(SPORT);
 ```
 
-8. Buat folder baru di server
+7. Buat folder baru di server dan setting permission folder dengan chmod
 
 ```bash
 mkdir /var/spool/recording/
 ```
 
-9. Pastikan library ffmpeg terinstall di server. Jika belum terinstall, maka install terlebih dahulu, klik https://bit.ly/2WbXhru
+8. Pastikan library ffmpeg terinstall di server. Jika belum terinstall, maka install terlebih dahulu, klik https://bit.ly/2WbXhru
 
 ```bash
 ffmpeg -version
