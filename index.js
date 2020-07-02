@@ -34,9 +34,9 @@ app.get("/", async (req, res) => {
 });
 
 app.post(
-  "/system/upload/agent/:agent/nik/:nik/date/:date/time/:time",
+  "/system/upload/agent/:agent/nik/:nik/date/:date/time/:time/dstHost/:host/dstServ/:server",
   async (req, res) => {
-    const { agent, nik, date, time } = req.params;
+    const { agent, nik, date, time, host, server } = req.params;
     if (!agent && !nik && !date && !time) {
       res.status(500).json({ code: 0, status: "Error Occured" });
       return;
@@ -49,7 +49,7 @@ app.post(
       }
       console.log("Video Uploaded");
       exec(
-        `bash doCombine IN-AGENT${agent}-NIK:${nik}-Date:${date}-Time:${time} IN-AGENT*-NIK:${nik}-Date:${date}-Time:${time} IN-AGENT${agent}-NIK:${nik}-Date:${date}-Time:${time}`,
+        `bash doCombine IN-AGENT${agent}-NIK:${nik}-Date:${date}-Time:${time} IN-AGENT*-NIK:${nik}-Date:${date}-Time:${time} IN-AGENT${agent}-NIK:${nik}-Date:${date}-Time:${time} ${host} ${server}`,
         (error, stderr, stdout) => {
           console.log("try to combine video and audio");
           if (error) {
