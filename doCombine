@@ -7,6 +7,7 @@ TEMPFILE=$ASTERISKDIR/temp$3.mp4
 VIDEORESULT=/var/spool/recording/$3.mp4
 HOSTNAME=$4
 IPHOST=$5
+PASSWORD=INIPASSWORD
 
 ffmpeg -i $VIDEOFILE $TEMPFILE
 
@@ -16,7 +17,8 @@ if [ -f "$VIDEORESULT" ]; then
 	echo "Combine Successfull"
 	echo "Delete $VIDEOFILE $AUDIOFILE $TEMPFILE"
 	rm -rf $VIDEOFILE $AUDIOFILE $TEMPFILE
-	scp $VIDEORESULT $HOSTNAME@$IPHOST:$VIDEORESULT
+	sshpass -p $PASSWORD scp $VIDEORESULT $HOSTNAME@$IPHOST:$VIDEORESULT
+	rm -rf $VIDEORESULT
 else
 	echo "Failed create combined video"
 	echo "Delete $TEMPFILE"
