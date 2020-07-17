@@ -10,6 +10,7 @@
     "fs": "0.0.1-security",
     "helmet": "^3.22.0",
     "https": "^1.0.0",
+    "morgan": "^1.10.0",
     "multer": "^1.4.2",
     "nodemon": "^2.0.4"
   },
