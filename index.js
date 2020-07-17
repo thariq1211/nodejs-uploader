@@ -9,13 +9,30 @@ var https = require("https");
 var http = require("http");
 var PORT = 5000;
 var SPORT = 5443;
+var logger = require("morgan");
 
 /**
  * Middleware
  */
+app.use(logger("common"));
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+
+const monthArr = [
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+  "08",
+  "09",
+  "10",
+  "11",
+  "12",
+];
 const storage = multer.diskStorage({
   destination: (request, file, callback) => {
     callback(null, "/var/spool/recording/");
@@ -36,6 +53,8 @@ app.get("/", async (req, res) => {
 app.post(
   "/system/upload/agent/:agent/nik/:nik/date/:date/time/:time/dstHost/:host/dstServ/:server",
   async (req, res) => {
+    const month = monthArr[new Date().getMonth()];
+    const year = new Date().getFullYear();
     const { agent, nik, date, time, host, server } = req.params;
     if (!agent && !nik && !date && !time) {
       res.status(500).json({ code: 0, status: "Error Occured" });
@@ -49,7 +68,7 @@ app.post(
       }
       console.log("Video Uploaded");
       exec(
-        `bash doCombine IN-AGENT${agent}-NIK:${nik}-Date:${date}-Time:${time} IN-AGENT*-NIK:${nik}-Date:${date}-Time:${time} IN-AGENT${agent}-NIK:${nik}-Date:${date}-Time:${time} ${host} ${server}`,
+        `bash doCombine IN-AGENT${agent}-NIK:${nik}-Date:${date}-Time:${time} IN-AGENT*-NIK:${nik}-Date:${date}-Time:${time} IN-AGENT${agent}-NIK:${nik}-Date:${date}-Time:${time} ${host}@${server} ${year}/${month}/`,
         (error, stderr, stdout) => {
           console.log("try to combine video and audio");
           if (error) {

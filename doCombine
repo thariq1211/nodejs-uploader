@@ -5,8 +5,8 @@ VIDEOFILE=$ASTERISKDIR/$1.mkv
 AUDIOFILE=$ASTERISKDIR/$2.mp3
 TEMPFILE=$ASTERISKDIR/temp$3.mp4
 VIDEORESULT=/var/spool/recording/$3.mp4
-HOSTNAME=$4
-IPHOST=$5
+DESTSERVER=$4
+DIRDESTSERVER=/home/webrtc/videocall/$5
 PASSWORD=INIPASSWORD
 
 ffmpeg -i $VIDEOFILE $TEMPFILE
@@ -17,7 +17,7 @@ if [ -f "$VIDEORESULT" ]; then
 	echo "Combine Successfull"
 	echo "Delete $VIDEOFILE $AUDIOFILE $TEMPFILE"
 	rm -rf $VIDEOFILE $AUDIOFILE $TEMPFILE
-	sshpass -p $PASSWORD scp $VIDEORESULT $HOSTNAME@$IPHOST:$VIDEORESULT
+	sshpass -p $PASSWORD scp $VIDEORESULT $DESTSERVER:$DIRDESTSERVER
 	rm -rf $VIDEORESULT
 else
 	echo "Failed create combined video"
