@@ -4,13 +4,16 @@ var helmet = require("helmet");
 var cors = require("cors");
 var fs = require("fs");
 var { exec } = require("child_process");
-var multer = require("multer");
+var cluster = require("cluster");
 var https = require("https");
 var http = require("http");
 var PORT = 5000;
 var SPORT = 5443;
+var numCpus = require("os").cpus().length;
 var logger = require("morgan");
 
+const upload = require("./helpers/multer");
+const forkingProcces = require("./helpers/forkFunction");
 /**
  * Middleware
  */
@@ -33,15 +36,6 @@ const monthArr = [
   "11",
   "12",
 ];
-const storage = multer.diskStorage({
-  destination: (request, file, callback) => {
-    callback(null, "/var/spool/recording/");
-  },
-  filename: (request, file, callback) => {
-    callback(null, file.originalname);
-  },
-});
-var upload = multer({ storage: storage }).single("videoFile");
 
 /**
  * Endpoints
@@ -53,49 +47,51 @@ app.get("/", async (req, res) => {
 app.post(
   "/system/upload/agent/:agent/nik/:nik/date/:date/time/:time/dstHost/:host/dstServ/:server",
   async (req, res) => {
-    const month = monthArr[new Date().getMonth()];
-    const year = new Date().getFullYear();
-    const { agent, nik, date, time, host, server } = req.params;
-    if (!agent && !nik && !date && !time) {
-      res.status(500).json({ code: 0, status: "Error Occured" });
-      return;
-    }
-    upload(req, res, (err) => {
-      if (err) {
-        console.error("error occured");
+    forkingProcces(() => {
+      const month = monthArr[new Date().getMonth()];
+      const year = new Date().getFullYear();
+      const { agent, nik, date, time, host, server } = req.params;
+      if (!agent && !nik && !date && !time) {
         res.status(500).json({ code: 0, status: "Error Occured" });
         return;
       }
-      console.log("Video Uploaded");
-      exec(
-        `bash doCombine IN-AGENT${agent}-NIK:${nik}-Date:${date}-Time:${time} IN-AGENT*-NIK:${nik}-Date:${date}-Time:${time} IN-AGENT${agent}-NIK:${nik}-Date:${date}-Time:${time} ${host}@${server} ${year}/${month}/`,
-        (error, stderr, stdout) => {
-          console.log("try to combine video and audio");
-          if (error) {
-            console.log(error);
-            res.json({
-              status: 0,
-              message: "Successful Upload, but combine error!!",
-              output: error,
-            });
-            return;
-          }
-          if (stderr) {
-            res.json({
-              status: 1,
-              message: "Successful Upload, combine with output message!!",
-              output: stderr,
-            });
-            return;
-          }
-          res.json({
-            status: 1,
-            message: "Successful Upload, combine success!!",
-            output: stdout,
-          });
+      upload(req, res, (err) => {
+        if (err) {
+          console.error("error occured");
+          res.status(500).json({ code: 0, status: "Error Occured" });
           return;
         }
-      );
+        console.log("Video Uploaded");
+        exec(
+          `bash doCombine IN-AGENT${agent}-NIK:${nik}-Date:${date}-Time:${time} IN-AGENT*-NIK:${nik}-Date:${date}-Time:${time} IN-AGENT${agent}-NIK:${nik}-Date:${date}-Time:${time} ${host}@${server} ${year}/${month}/`,
+          (error, stderr, stdout) => {
+            console.log("try to combine video and audio");
+            if (error) {
+              console.log(error);
+              res.json({
+                status: 0,
+                message: "Successful Upload, but combine error!!",
+                output: error,
+              });
+              return;
+            }
+            if (stderr) {
+              res.json({
+                status: 1,
+                message: "Successful Upload, combine with output message!!",
+                output: stderr,
+              });
+              return;
+            }
+            res.json({
+              status: 1,
+              message: "Successful Upload, combine success!!",
+              output: stdout,
+            });
+            return;
+          }
+        );
+      });
     });
   }
 );
@@ -121,6 +117,13 @@ app.post(
 //     console.log(`secure server up on ${SPORT}`)
 //   });
 
-http.createServer(app).listen(PORT, () => {
-  console.log(`server up on ${PORT}`);
-});
+if (cluster.isMaster) {
+  for (let i = 0; i < numCpus; i += 1) {
+    cluster.fork();
+  }
+  console.log(`server up with master pid [${process.pid}]`);
+} else {
+  http.createServer(app).listen(PORT, () => {
+    console.log(`server up with pid [${process.pid}]`);
+  });
+}
