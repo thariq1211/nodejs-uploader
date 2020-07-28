@@ -5,7 +5,7 @@ const storage = multer.diskStorage({
     callback(null, "/var/spool/recording/");
   },
   filename: (_request, _file, callback) => {
-    callback(null, file.originalname);
+    callback(null, _file.originalname);
   },
 });
 var upload = multer({ storage: storage }).single("videoFile");
