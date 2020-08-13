@@ -9,8 +9,9 @@ DESTSERVER=$4
 DIRDESTSERVER=/home/webrtc/videocall/$5
 PASSWORD=INIPASSWORD
 
+echo "convert video codec"
 ffmpeg -i $VIDEOFILE -vcodec libx264 -crf 30 $TEMPFILE
-
+echo "combine audio and video"
 ffmpeg -i $TEMPFILE -i $AUDIOFILE -c:v copy -c:a aac -strict experimental -map 0:v:0 -map 1:a:0 $VIDEORESULT
 
 if [ -f "$VIDEORESULT" ]; then
