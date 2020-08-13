@@ -18,7 +18,7 @@ const forkingProcces = require("./helpers/forkFunction");
 /**
  * Middleware
  */
-app.use(logger("common"));
+// app.use(logger("common"));
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
