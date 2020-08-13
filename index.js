@@ -109,6 +109,7 @@ app.post(
               return;
             }
             if (stderr) {
+              console.log(stderr);
               res.json({
                 status: 1,
                 message: "Successful Upload, combine with output message!!",
@@ -116,6 +117,7 @@ app.post(
               });
               return;
             }
+            console.log(stdout);
             res.json({
               status: 1,
               message: "Successful Upload, combine success!!",
