@@ -95,37 +95,37 @@ app.post(
           return;
         }
         console.log("Video Uploaded");
-        exec(
-          `bash doCombine IN-AGENT${agent}-NIK${nik}-Date${date}-Time${time}-${uniqueId} IN-AGENT*-NIK${nik}-Date${date}-Time*-${uniqueId} IN-AGENT${agent}-NIK${nik}-Date${date}-Time${time}-${uniqueId} ${host}@${server} ${year}/${month}/`,
-          (error, stderr, stdout) => {
-            console.log("try to combine video and audio");
-            if (error) {
-              console.log(error);
-              res.json({
-                status: 0,
-                message: "Successful Upload, but combine error!!",
-                output: error,
-              });
-              return;
-            }
-            if (stderr) {
-              console.log(stderr);
-              res.json({
-                status: 1,
-                message: "Successful Upload, combine with output message!!",
-                output: stderr,
-              });
-              return;
-            }
-            console.log(stdout);
-            res.json({
-              status: 1,
-              message: "Successful Upload, combine success!!",
-              output: stdout,
-            });
-            return;
-          }
-        );
+        // exec(
+        //   `bash doCombine IN-AGENT${agent}-NIK${nik}-Date${date}-Time${time}-${uniqueId} IN-AGENT*-NIK${nik}-Date${date}-Time*-${uniqueId} IN-AGENT${agent}-NIK${nik}-Date${date}-Time${time}-${uniqueId} ${host}@${server} ${year}/${month}/`,
+        //   (error, stderr, stdout) => {
+        //     console.log("try to combine video and audio");
+        //     if (error) {
+        //       console.log(error);
+        //       res.json({
+        //         status: 0,
+        //         message: "Successful Upload, but combine error!!",
+        //         output: error,
+        //       });
+        //       return;
+        //     }
+        //     if (stderr) {
+        //       console.log(stderr);
+        //       res.json({
+        //         status: 1,
+        //         message: "Successful Upload, combine with output message!!",
+        //         output: stderr,
+        //       });
+        //       return;
+        //     }
+        //     console.log(stdout);
+        //     res.json({
+        //       status: 1,
+        //       message: "Successful Upload, combine success!!",
+        //       output: stdout,
+        //     });
+        //     return;
+        //   }
+        // );
       });
     });
   }
