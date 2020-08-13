@@ -96,7 +96,7 @@ app.post(
         }
         console.log("Video Uploaded");
         exec(
-          `bash doCombine IN-AGENT${agent}-NIK-${nik}-Date-${date}-Time-${time}-${uniqueId} IN-AGENT*-NIK-${nik}-Date-${date}-Time-*-${uniqueId} IN-AGENT${agent}-NIK-${nik}-Date-${date}-Time-${time}-${uniqueId} ${host}@${server} ${year}/${month}/`,
+          `bash doCombine IN-AGENT${agent}-NIK${nik}-Date${date}-Time${time}-${uniqueId} IN-AGENT*-NIK${nik}-Date${date}-Time*-${uniqueId} IN-AGENT${agent}-NIK${nik}-Date${date}-Time${time}-${uniqueId} ${host}@${server} ${year}/${month}/`,
           (error, stderr, stdout) => {
             console.log("try to combine video and audio");
             if (error) {
