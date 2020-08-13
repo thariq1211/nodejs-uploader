@@ -11,6 +11,7 @@ var PORT = 5000;
 var SPORT = 5443;
 var numCpus = require("os").cpus().length;
 var logger = require("morgan");
+var pool = require("./db");
 
 const upload = require("./helpers/multer");
 const forkingProcces = require("./helpers/forkFunction");
@@ -44,13 +45,45 @@ app.get("/", async (req, res) => {
   res.sendStatus(202);
 });
 
+app.post("/inbound/getUniqueID", async (req, res) => {
+  try {
+    const { src, dst } = req.body;
+    const getUniqueID = await pool.query(
+      "SELECT id, caller_id, connected, datetime FROM public.callhistory WHERE caller_id=$1 AND connected=$2 ORDER BY datetime DESC limit 1",
+      [src, dst]
+    );
+    if (getUniqueID.rows[0]) {
+      res.json({
+        code: 1,
+        message: "success",
+        content: {
+          uniqueid: getUniqueID.rows[0].id,
+          src: getUniqueID.rows[0].caller_id,
+          dst: getUniqueID.rows[0].connected,
+          start: getUniqueID.rows[0].datetime,
+        },
+      });
+    } else {
+      res.json({
+        code: 0,
+        message: "data not found",
+      });
+    }
+  } catch (error) {
+    res.send({
+      code: 0,
+      message: error.message,
+    });
+  }
+});
+
 app.post(
-  "/system/upload/agent/:agent/nik/:nik/date/:date/time/:time/dstHost/:host/dstServ/:server",
+  "/system/upload/agent/:agent/nik/:nik/date/:date/time/:time/dstHost/:host/dstServ/:server/:uniqueId",
   async (req, res) => {
     forkingProcces(() => {
       const month = monthArr[new Date().getMonth()];
       const year = new Date().getFullYear();
-      const { agent, nik, date, time, host, server } = req.params;
+      const { agent, nik, date, time, host, server, uniqueId } = req.params;
       if (!agent && !nik && !date && !time) {
         res.status(500).json({ code: 0, status: "Error Occured" });
         return;
@@ -63,7 +96,7 @@ app.post(
         }
         console.log("Video Uploaded");
         exec(
-          `bash doCombine IN-AGENT${agent}-NIK-${nik}-Date-${date}-Time-${time} IN-AGENT*-NIK-${nik}-Date-${date}-Time-${time} IN-AGENT${agent}-NIK-${nik}-Date-${date}-Time-${time} ${host}@${server} ${year}/${month}/`,
+          `bash doCombine IN-AGENT${agent}-NIK-${nik}-Date-${date}-Time-${time}-${uniqueId} IN-AGENT*-NIK-${nik}-Date-${date}-Time-*-${uniqueId} IN-AGENT${agent}-NIK-${nik}-Date-${date}-Time-${time}-${uniqueId} ${host}@${server} ${year}/${month}/`,
           (error, stderr, stdout) => {
             console.log("try to combine video and audio");
             if (error) {
