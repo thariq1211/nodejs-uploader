@@ -94,7 +94,6 @@ app.post(
           res.status(500).json({ code: 0, status: "Error Occured" });
           return;
         }
-        console.log(res)
         console.log("Video Uploaded");
         res.send({ code: 1, status: "Video Uploaded" });
         // exec(
