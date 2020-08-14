@@ -15,7 +15,7 @@ echo "combine audio and video"
 ffmpeg -i $TEMPFILE -i $AUDIOFILE -c:v copy -c:a aac -strict experimental -map 0:v:0 -map 1:a:0 $VIDEORESULT
 
 if [ -f "$VIDEORESULT" ]; then
-	echo "Combine Successfull"
+	echo "Combine successfull"
 	echo "Delete $VIDEOFILE $AUDIOFILE $TEMPFILE"
 	rm -rf $VIDEOFILE $AUDIOFILE $TEMPFILE
 	sshpass -p $PASSWORD scp $VIDEORESULT $DESTSERVER:$DIRDESTSERVER

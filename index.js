@@ -85,48 +85,48 @@ app.post(
       const year = new Date().getFullYear();
       const { agent, nik, date, time, host, server, uniqueId } = req.params;
       if (!agent && !nik && !date && !time) {
-        res.status(500).json({ code: 0, status: "Error Occured" });
+        res.status(500).json({ status: 0, message: "Error occured" });
         return;
       }
       upload(req, res, (err) => {
         if (err) {
           console.error("error occured");
-          res.status(500).json({ code: 0, status: "Error Occured" });
+          res.status(500).json({ status: 0, message: "Error occured" });
           return;
         }
-        console.log("Video Uploaded");
-        res.send({ code: 1, status: "Video Uploaded" });
-        // exec(
-        //   `bash doCombine IN-AGENT${agent}-NIK${nik}-Date${date}-Time${time}-${uniqueId} IN-AGENT*-NIK${nik}-Date${date}-Time*-${uniqueId} IN-AGENT${agent}-NIK${nik}-Date${date}-Time${time}-${uniqueId} ${host}@${server} ${year}/${month}/`,
-        //   (error, stderr, stdout) => {
-        //     console.log("try to combine video and audio");
-        //     if (error) {
-        //       console.log(error);
-        //       res.json({
-        //         status: 0,
-        //         message: "Successful Upload, but combine error!!",
-        //         output: error,
-        //       });
-        //       return;
-        //     }
-        //     if (stderr) {
-        //       console.log(stderr);
-        //       res.json({
-        //         status: 1,
-        //         message: "Successful Upload, combine with output message!!",
-        //         output: stderr,
-        //       });
-        //       return;
-        //     }
-        //     console.log(stdout);
-        //     res.json({
-        //       status: 1,
-        //       message: "Successful Upload, combine success!!",
-        //       output: stdout,
-        //     });
-        //     return;
-        //   }
-        // );
+        console.log("video uploaded");
+        // res.send({ code: 1, status: "Video Uploaded" });
+        exec(
+          `bash doCombine IN-AGENT${agent}-NIK${nik}-Date${date}-Time${time}-${uniqueId} IN-AGENT*-NIK${nik}-Date${date}-Time*-${uniqueId} IN-AGENT${agent}-NIK${nik}-Date${date}-Time${time}-${uniqueId} ${host}@${server} ${year}/${month}/`,
+          (error, stderr, stdout) => {
+            console.log("try to combine video and audio");
+            if (error) {
+              console.log(error);
+              res.json({
+                status: 0,
+                message: "Successful upload, but combine error!!",
+                output: error,
+              });
+              return;
+            }
+            if (stderr) {
+              console.log(stderr);
+              res.json({
+                status: 1,
+                message: "Successful upload, combine with output message!!",
+                output: stderr,
+              });
+              return;
+            }
+            console.log(stdout);
+            res.json({
+              status: 1,
+              message: "Successful upload, combine success!!",
+              output: stdout,
+            });
+            return;
+          }
+        );
       });
     });
   }
@@ -159,7 +159,20 @@ if (cluster.isMaster) {
   }
   console.log(`server up with master pid [${process.pid}]`);
 } else {
-  http.createServer(app).listen(PORT, () => {
-    console.log(`server up with pid [${process.pid}]`);
-  });
+  // http.createServer(app).listen(PORT, () => {
+  //   console.log(`server up with pid [${process.pid}]`);
+  // });
+  https
+    .createServer(
+      {
+        /** FILE CONFIG CERT */
+        key: fs.readFileSync("./cert/privkey.pem"),
+        cert: fs.readFileSync("./cert/cert.pem"),
+        passphrase: "PASSWORD CERT",
+      },
+      app
+    )
+    .listen(SPORT, () => {
+      console.log(`server up with pid [${process.pid}]`);
+    });
 }

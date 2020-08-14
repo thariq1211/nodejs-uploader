@@ -5,7 +5,7 @@ const storage = multer.diskStorage({
     callback(null, "/var/spool/recording");
   },
   filename: (_request, _file, callback) => {
-    console.log(_file)
+    // console.log(_file)
     callback(null, _file.originalname);
   },
 });
