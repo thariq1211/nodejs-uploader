@@ -95,6 +95,7 @@ app.post(
           return;
         }
         console.log("Video Uploaded");
+        res.send({ code: 1, status: "Video Uploaded" });
         // exec(
         //   `bash doCombine IN-AGENT${agent}-NIK${nik}-Date${date}-Time${time}-${uniqueId} IN-AGENT*-NIK${nik}-Date${date}-Time*-${uniqueId} IN-AGENT${agent}-NIK${nik}-Date${date}-Time${time}-${uniqueId} ${host}@${server} ${year}/${month}/`,
         //   (error, stderr, stdout) => {
