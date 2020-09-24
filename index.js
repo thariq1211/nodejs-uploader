@@ -8,7 +8,7 @@ var cluster = require("cluster");
 var https = require("https");
 var http = require("http");
 var PORT = 5000;
-var SPORT = 5443;
+var SPORT = 8088;
 var numCpus = require("os").cpus().length;
 var logger = require("morgan");
 var pool = require("./db");
@@ -159,9 +159,10 @@ if (cluster.isMaster) {
   }
   console.log(`server up with master pid [${process.pid}]`);
 } else {
-  http.createServer(app).listen(PORT, () => {
-    console.log(`server up with pid [${process.pid}] ${PORT}`);
-  });
+<<<<<<< HEAD
+  //http.createServer(app).listen(PORT, () => {
+  //  console.log(`server up with pid [${process.pid}] ${PORT}`);
+  //});
   // https
   //   .createServer(
   //     {
@@ -175,4 +176,19 @@ if (cluster.isMaster) {
   //   .listen(SPORT, () => {
   //     console.log(`server up with pid [${process.pid}]`);
   //   });
+  // http.createServer(app).listen(PORT, () => {
+  //   console.log(`server up with pid [${process.pid}]`);
+  // });
+  https
+    .createServer(
+      {
+        /** FILE CONFIG CERT */
+        key: fs.readFileSync("/etc/pki/tls/private/localhost.key"),
+        cert: fs.readFileSync("/etc/pki/tls/certs/localhost.crt"),
+      },
+      app
+    )
+    .listen(SPORT, () => {
+      console.log(`server up with pid [${process.pid}]`);
+    });
 }

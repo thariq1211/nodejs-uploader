@@ -6,8 +6,8 @@ AUDIOFILE=$ASTERISKDIR/$2.mp3
 TEMPFILE=$ASTERISKDIR/temp$3.mp4
 VIDEORESULT=/var/spool/recording/$3.mp4
 DESTSERVER=$4
-DIRDESTSERVER=/home/webrtc/videocall/$5
-PASSWORD=INIPASSWORD
+DIRDESTSERVER=/data/webrtc/videocall/$5
+PASSWORD=P@ssw0rd
 
 echo "convert video codec"
 ffmpeg -i $VIDEOFILE -vcodec libx264 -crf 30 $TEMPFILE
