@@ -91,7 +91,7 @@ app.post(
       upload(req, res, (err) => {
         if (err) {
           console.error("error occured");
-          res.status(200).json({ code: 0, message: "Error occured" });
+          res.status(500).json({ code: 0, message: "Error occured" });
           return;
         }
         console.log("video uploaded");
