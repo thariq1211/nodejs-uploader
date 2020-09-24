@@ -91,11 +91,11 @@ app.post(
       upload(req, res, (err) => {
         if (err) {
           console.error("error occured");
-          res.status(500).json({ code: 0, message: "Error occured" });
+          res.status(500).json({ status: 0, message: "Error occured" });
           return;
         }
         console.log("video uploaded");
-        res.send({ code: 1, message: "Video Uploaded" });
+        res.send({ status: 1, message: "Video Uploaded" });
         exec(
           `bash doCombine IN-AGENT${agent}-NIK${nik}-Date${date}-Time${time}-${uniqueId} IN-AGENT*-NIK${nik}-Date${date}-Time*-${uniqueId} IN-AGENT${agent}-NIK${nik}-Date${date}-Time${time}-${uniqueId} ${host}@${server} ${year}/${month}/`,
           (error, stderr, stdout) => {
