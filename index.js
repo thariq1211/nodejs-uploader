@@ -8,7 +8,7 @@ var cluster = require("cluster");
 var https = require("https");
 var http = require("http");
 var PORT = 5000;
-var SPORT = 5443;
+var SPORT = 8088;
 var numCpus = require("os").cpus().length;
 var logger = require("morgan");
 var pool = require("./db");
@@ -111,7 +111,7 @@ app.post(
         console.log("video uploaded");
         res.send({ status: 1, message: "Video Uploaded" });
         exec(
-          `bash doCombine IN-AGENT${agent}-NIK${nik}-Date${date}-Time${time}-${uniqueId} IN-AGENT*-NIK${nik}-Date${date}-Time*-${uniqueId} IN-AGENT${agent}-NIK${nik}-Date${date}-Time${time}-${uniqueId} ${host}@${server} ${year}/${month}/`,
+          `bash doCombine IN-AGENT${agent}-NIK${nik}-Date${date}-Time*-${uniqueId} IN-AGENT*-NIK${nik}-Date${date}-Time*-${uniqueId} IN-AGENT${agent}-NIK${nik}-Date${date}-Time${time}-${uniqueId} ${host}@${server} ${year}/${month}/`,
           (error, stderr, stdout) => {
             console.log("try to combine video and audio");
             if (error) {
@@ -173,17 +173,31 @@ if (cluster.isMaster) {
   }
   console.log(`server up with master pid [${process.pid}]`);
 } else {
+  //http.createServer(app).listen(PORT, () => {
+  //  console.log(`server up with pid [${process.pid}] ${PORT}`);
+  //});
+  // https
+  //   .createServer(
+  //     {
+  //       /** FILE CONFIG CERT */
+  //       key: fs.readFileSync("./cert/privkey.pem"),
+  //       cert: fs.readFileSync("./cert/cert.pem"),
+  //       passphrase: "PASSWORD CERT",
+  //     },
+  //     app
+  //   )
+  //   .listen(SPORT, () => {
+  //     console.log(`server up with pid [${process.pid}]`);
+  //   });
   // http.createServer(app).listen(PORT, () => {
-  //   console.log(`server up with pid [${process.pid}] ${PORT}`);
-  //   console.log(homedir);
+  //   console.log(`server up with pid [${process.pid}]`);
   // });
   https
     .createServer(
       {
         /** FILE CONFIG CERT */
-        key: fs.readFileSync(`${homedir}/localhost.key`),
-        cert: fs.readFileSync(`${homedir}/localhost.crt`),
-        // passphrase: "PASSWORD CERT",
+        key: fs.readFileSync("/etc/pki/tls/private/localhost.key"),
+        cert: fs.readFileSync("/etc/pki/tls/certs/localhost.crt"),
       },
       app
     )
