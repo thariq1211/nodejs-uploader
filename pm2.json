@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "name": "nodeBackendUploader2",
+      "name": "nodeBackendUploader",
       "script": "npm",
       "args": "start"
     }

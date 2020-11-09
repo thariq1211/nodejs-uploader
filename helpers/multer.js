@@ -1,9 +1,10 @@
 var multer = require("multer");
-var homedir = require("os").homedir();
 
+// console.log(process.env.PATHVIDEO);
+// /data/webrtc/videocall
 const storage = multer.diskStorage({
   destination: (_request, _file, callback) => {
-    callback(null, `${homedir}/Videos`);
+    callback(null, process.env.PATHVIDEO);
   },
   filename: (_request, _file, callback) => {
     // console.log(_file)
