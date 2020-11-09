@@ -12,6 +12,7 @@ var SPORT = 5443;
 var numCpus = require("os").cpus().length;
 var logger = require("morgan");
 var pool = require("./db");
+var homedir = require("os").homedir();
 
 const upload = require("./helpers/multer");
 const forkingProcces = require("./helpers/forkFunction");
@@ -43,6 +44,19 @@ const monthArr = [
  */
 app.get("/", async (req, res) => {
   res.sendStatus(202);
+});
+
+app.post("/upload", async (req, res) => {
+  try {
+    upload(req, res, (err) => {
+      if (err) {
+        return res.send({code: 0, message: "error upload"});
+      }
+    })
+    return res.send({code: 1, message: "success"});
+  } catch (error) {
+    return res.send({code : 0, message: "error"});
+  }
 });
 
 app.post("/inbound/getUniqueID", async (req, res) => {
@@ -159,20 +173,21 @@ if (cluster.isMaster) {
   }
   console.log(`server up with master pid [${process.pid}]`);
 } else {
-  http.createServer(app).listen(PORT, () => {
-    console.log(`server up with pid [${process.pid}] ${PORT}`);
-  });
-  // https
-  //   .createServer(
-  //     {
-  //       /** FILE CONFIG CERT */
-  //       key: fs.readFileSync("./cert/privkey.pem"),
-  //       cert: fs.readFileSync("./cert/cert.pem"),
-  //       passphrase: "PASSWORD CERT",
-  //     },
-  //     app
-  //   )
-  //   .listen(SPORT, () => {
-  //     console.log(`server up with pid [${process.pid}]`);
-  //   });
+  // http.createServer(app).listen(PORT, () => {
+  //   console.log(`server up with pid [${process.pid}] ${PORT}`);
+  //   console.log(homedir);
+  // });
+  https
+    .createServer(
+      {
+        /** FILE CONFIG CERT */
+        key: fs.readFileSync(`${homedir}/localhost.key`),
+        cert: fs.readFileSync(`${homedir}/localhost.crt`),
+        // passphrase: "PASSWORD CERT",
+      },
+      app
+    )
+    .listen(SPORT, () => {
+      console.log(`server up with pid [${process.pid}]`);
+    });
 }
