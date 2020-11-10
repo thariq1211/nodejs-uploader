@@ -1,4 +1,4 @@
-var multer = require("multer");
+const multer = require("multer");
 
 // console.log(process.env.PATHVIDEO);
 // /data/webrtc/videocall
@@ -11,6 +11,6 @@ const storage = multer.diskStorage({
     callback(null, _file.originalname);
   },
 });
-var upload = multer({ storage: storage }).single("videoFile");
+const upload = multer({ storage: storage }).single("videoFile");
 
 module.exports = upload;

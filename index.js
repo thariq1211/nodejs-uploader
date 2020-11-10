@@ -1,15 +1,15 @@
-var express = require("express");
-var env = require("dotenv");
-var app = express();
-var helmet = require("helmet");
-var cors = require("cors");
-var fs = require("fs");
-var { exec } = require("child_process");
-var https = require("https");
-var http = require("http");
-var PORT = process.env.PORT;
-var SPORT = process.env.SPORT;
-var logger = require("morgan");
+const express = require("express");
+const env = require("dotenv");
+const app = express();
+const helmet = require("helmet");
+const cors = require("cors");
+const fs = require("fs");
+const { exec } = require("child_process");
+const https = require("https");
+const http = require("http");
+const PORT = process.env.PORT;
+const SPORT = process.env.SPORT;
+const logger = require("morgan");
 
 const upload = require("./helpers/multer");
 const forkingProcces = require("./helpers/forkFunction");
