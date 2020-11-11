@@ -12,6 +12,7 @@ var SPORT = 8088;
 var numCpus = require("os").cpus().length;
 var logger = require("morgan");
 var pool = require("./db");
+var forkFunc = require("./helpers/forkFunction");
 
 const upload = require("./helpers/multer");
 const forkingProcces = require("./helpers/forkFunction");
@@ -74,6 +75,26 @@ app.post("/inbound/getUniqueID", async (req, res) => {
       code: 0,
       message: error.message,
     });
+  }
+});
+
+app.post("/system/upload", async (req, res) => {
+  try {
+    forkFunc(() => {
+      upload(req, res, (err) => {
+        if (err) {
+          console.log(`Error: ${err.message}`);
+          return res.send({ status: 0, message: `error: ${err.message}` });
+        }
+        console.log(`upload ${req.file.originalname} sukses`);
+        return res.send({
+          status: 1,
+          message: `upload ${req.file.originalname} sukses`,
+        });
+      });
+    });
+  } catch (error) {
+    return res.send({ status: 0, message: `error: ${error.message}` });
   }
 });
 
@@ -159,9 +180,9 @@ if (cluster.isMaster) {
   }
   console.log(`server up with master pid [${process.pid}]`);
 } else {
-  //http.createServer(app).listen(PORT, () => {
-  //  console.log(`server up with pid [${process.pid}] ${PORT}`);
-  //});
+  // http.createServer(app).listen(PORT, () => {
+  //   console.log(`server up with pid [${process.pid}] ${PORT}`);
+  // });
   // https
   //   .createServer(
   //     {
@@ -178,6 +199,7 @@ if (cluster.isMaster) {
   // http.createServer(app).listen(PORT, () => {
   //   console.log(`server up with pid [${process.pid}]`);
   // });
+
   https
     .createServer(
       {
