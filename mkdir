@@ -1,0 +1,14 @@
+#!/bin/bash
+MONTH=$(date +"%m")
+YEAR=$(date +"%Y")
+DIR=$(pwd)/video
+
+if [ -d "$DIR/$YEAR/$MONTH" ]; then
+  echo "month folder exist"
+elif [ -d "$DIR/$YEAR" ]; then
+  echo "create $DIR/$YEAR/$MONTH"
+  mkdir $DIR/$YEAR/$MONTH
+else
+  echo "create $DIR/$YEAR $DIR/$YEAR/$MONTH"
+  mkdir $DIR/$YEAR $DIR/$YEAR/$MONTH
+fi
