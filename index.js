@@ -31,18 +31,23 @@ app.get("/", async (req, res) => {
 
 app.post("/upload/date/:year-:month", async (req, res) => {
   const { year, month } = req.params;
-  try {
-    upload(req, res, (err) => {
-      if (err) {
-        return res.send({ code: 0, message: "error upload" });
-      }
-      exec(`mv ${req.file.path} ${req.file.destination}/${year}/${month}`);
-      return res.send({ code: 1, message: "success" });
-    });
-    // exec(`mv `)
-  } catch (error) {
-    return res.send({ code: 0, message: "error" });
-  }
+  forkingProcces(() => {
+    try {
+      upload(req, res, (err) => {
+        if (err) {
+          return res.send({ code: 0, message: "error upload" });
+        }
+        try {
+          exec(`mv ${req.file.path} ${req.file.destination}/${year}/${month}`);
+          return res.send({ code: 1, message: "success" });
+        } catch (error) {
+          return res.send({ code: 0, message: "file undefined" });
+        }
+      });
+    } catch (error) {
+      return res.send({ code: 0, message: "error" });
+    }
+  });
 });
 
 forkingProcces(() => {
